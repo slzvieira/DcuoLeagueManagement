@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView fx:id="tblRanking" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <columns>
+            <TableColumn fx:id="colName" prefWidth="150.0" text="Name" />
+            <TableColumn fx:id="colPower" prefWidth="100.0" text="Power" />
+            <TableColumn fx:id="colLevel" prefWidth="68.0" text="Level" />
+            <TableColumn fx:id="colCr" prefWidth="71.0" style="-fx-alignment: CENTER-RIGHT;" text="CR" />
+            <TableColumn fx:id="colCrPvp" prefWidth="63.0" text="CR PvP" />
+            <TableColumn fx:id="colSkill" prefWidth="78.0" text="Skill Points" />
+            <TableColumn fx:id="colRank" prefWidth="50.0" text="Rank" />
+         </columns>
+      </TableView>
+   </center>
+</BorderPane>
