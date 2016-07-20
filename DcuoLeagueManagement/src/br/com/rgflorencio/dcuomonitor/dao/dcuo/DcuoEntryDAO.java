@@ -23,10 +23,11 @@ public interface DcuoEntryDAO extends TransactionalDAO {
 
     /**
      * TODO DOCUMENT ME!
+     * @param leagueId 
      * @return
      * @throws DAOException
      */
-    List<DcuoEntryEvent> findAllEvents() throws DAOException;
+    List<DcuoEntryEvent> findEventsByLeagueId(int leagueId) throws DAOException;
 
     /**
      * TODO DOCUMENT ME!

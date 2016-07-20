@@ -58,7 +58,8 @@ public interface DcuoCharacterDAO extends TransactionalDAO {
 
     /**
      * TODO DOCUMENT ME!
+     * @param leagueId 
      * @throws DAOException
      */
-    void updateStatus() throws DAOException;
+    void updateStatusByLeagueId(int leagueId) throws DAOException;
 }

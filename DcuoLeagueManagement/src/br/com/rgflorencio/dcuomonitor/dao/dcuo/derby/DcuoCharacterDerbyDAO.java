@@ -374,7 +374,7 @@ public class DcuoCharacterDerbyDAO extends AbstractDerbyDAO implements DcuoChara
                 ps.setInt(10, character.getGender().getFlag());
                 ps.setInt(11, character.getRegionId());
                 ps.setInt(12, character.getPersonId());
-                ps.setBoolean(13, character.isActive());
+//                ps.setBoolean(13, character.isActive());
                 ps.setBoolean(14, character.isDeleted());
                 ps.setInt(15, character.getId());
 
@@ -397,7 +397,7 @@ public class DcuoCharacterDerbyDAO extends AbstractDerbyDAO implements DcuoChara
                 ps.setInt(11, character.getGender().getFlag());
                 ps.setInt(12, character.getRegionId());
                 ps.setInt(13, character.getPersonId());
-                ps.setBoolean(14, character.isActive());
+//                ps.setBoolean(14, character.isActive());
                 ps.setBoolean(15, character.isDeleted());
 
                 ps.executeUpdate();
@@ -417,7 +417,7 @@ public class DcuoCharacterDerbyDAO extends AbstractDerbyDAO implements DcuoChara
      * TODO DOCUMENT ME!
      * @throws DAOException
      */
-    public void updateStatus() throws DAOException {
+    public void updateStatusByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
         Statement st = null;
@@ -462,7 +462,7 @@ public class DcuoCharacterDerbyDAO extends AbstractDerbyDAO implements DcuoChara
         character.setGender(DcuoGender.getByFlag(rs.getInt("gender_code")));
         character.setRegionId(rs.getInt("region_code"));
         character.setPersonId(rs.getInt("person_code"));
-        character.setActive(rs.getBoolean("active_ind"));
+//        character.setActive(rs.getBoolean("active_ind"));
         character.setDeleted(rs.getBoolean("deleted_ind"));
 
         return character;

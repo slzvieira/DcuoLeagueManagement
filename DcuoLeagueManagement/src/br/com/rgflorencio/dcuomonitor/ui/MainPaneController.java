@@ -9,20 +9,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+
+import javax.swing.JOptionPane;
+
 import br.com.rgflorencio.dcuomonitor.dao.DAOException;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterDAO;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoDAOFactory;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoEntryDAO;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoLeagueDAO;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterStatus;
 import br.com.rgflorencio.dcuomonitor.model.DcuoEntryEvent;
@@ -53,9 +54,9 @@ public class MainPaneController extends BorderPane {
     @FXML
     private Label lblStatus;
 
-    private Node nodeNewLeague;
-    private Node nodeLeagueDetail;
-    private Node nodeImport;
+    private NewLeaguePaneController nodeNewLeague;
+    private LeagueDetailPaneController nodeLeagueDetail;
+    private ImportPaneController nodeImport;
 
     @FXML
     void lstMembroKeyReleased(KeyEvent event) {
@@ -190,6 +191,7 @@ public class MainPaneController extends BorderPane {
         loader = new FXMLLoader(getClass().getResource("/resources/ImportPane.fxml"));
         loader.setRoot(new ImportPaneController());
         this.nodeImport = loader.load();
+//        this.nodeImport.setRoot(this);
         ((ImportPaneController) loader.getController()).setRoot(this);
     }
 
@@ -228,6 +230,10 @@ public class MainPaneController extends BorderPane {
         DcuoCharacterDAO characterDAO = DcuoDAOFactory.getInstance().getDcuoCharacterDAO();
         List<DcuoCharacterStatus> characterList = characterDAO.findByLeagueId(league.getId());
         lstMember.setItems(FXCollections.observableArrayList(characterList));
+
+        DcuoEntryDAO entryDAO = DcuoDAOFactory.getInstance().getDcuoEntryDAO();
+        List<DcuoEntryEvent> entryEventList = entryDAO.findEventsByLeagueId(league.getId());
+        lstEvent.setItems(FXCollections.observableArrayList(entryEventList));
 
         List<String> generalList = new ArrayList<>(2);
         generalList.add("Ranking");

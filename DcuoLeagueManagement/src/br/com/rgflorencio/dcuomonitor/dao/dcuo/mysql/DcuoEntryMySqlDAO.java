@@ -154,12 +154,10 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
         }
     }
 
-    /**
-     * TODO DOCUMENT ME!
-     * @return
-     * @throws DAOException 
+    /* (non-Javadoc)
+     * @see br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoEntryDAO#findEventsByLeagueId(int)
      */
-    public List<DcuoEntryEvent> findAllEvents() throws DAOException {
+    public List<DcuoEntryEvent> findEventsByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
         Statement st = null;

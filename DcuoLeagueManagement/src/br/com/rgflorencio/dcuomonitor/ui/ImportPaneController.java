@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -36,6 +37,9 @@ import br.com.rgflorencio.dcuomonitor.service.ServiceException;
  * @version 1.0, 01/06/2015 - sandro.vieira - Implementacao.
  */
 public class ImportPaneController extends BorderPane {
+
+    @FXML
+    private Label lblLeagueName;
 
     @FXML
     private ToggleGroup grpImportType;
@@ -86,7 +90,7 @@ public class ImportPaneController extends BorderPane {
 
     @FXML
     void btnImportOnAction(ActionEvent event) {
-
+        
         try {
 
             btnImport.getScene().setCursor(Cursor.WAIT);

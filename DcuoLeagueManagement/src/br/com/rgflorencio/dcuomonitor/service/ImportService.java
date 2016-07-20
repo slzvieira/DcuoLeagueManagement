@@ -262,13 +262,13 @@ public class ImportService {
                 character.setGender(DcuoGender.getByName(characterInputData.getGender()));
                 character.setRegionId(regionId);
                 character.setPersonId(personalityId);
-                character.setActive(true);
                 character.setDeleted(characterInputData.isDeleted());
                 characterDAO.persist(character);
 
                 characterHistory = new DcuoCharacterHistory();
                 characterHistory.setCharId(character.getId());
                 characterHistory.setEntryId(entry.getId());
+                characterHistory.setLeagueId(league.getId());
                 characterHistory.setPowerId(powerTypeId);
                 characterHistory.setCombatRating(characterInputData.getCombatRating());
                 characterHistory.setCombatRatingPvp(characterInputData.getPvpCombatRating());
@@ -279,7 +279,7 @@ public class ImportService {
             }
 
 //            out.println("Atualizando status dos membros da liga...");
-            characterDAO.updateStatus();
+            characterDAO.updateStatusByLeagueId(league.getId());
 //            out.println("Status atualizados. Importação concluída com sucesso.");
             entryDAO.commitTransaction();
 

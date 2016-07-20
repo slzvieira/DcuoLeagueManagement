@@ -31,8 +31,8 @@ import br.com.rgflorencio.dcuomonitor.model.DcuoSummaryStatus;
 public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoCharacterDAO {
 
     private static final String SQL_SELECT_FULL =
-            "SELECT char_code, char_census_id, char_name, power_code, pve_cr_val, pvp_cr_val, skill_val, rank_code," +
-            " level_val, mvmnt_code, origin_code, gender_code, region_code, person_code, active_ind, deleted_ind " +
+            "SELECT char_code, char_census_id, char_name, league_code, power_code, pve_cr_val, pvp_cr_val, skill_val," +
+            " rank_code, level_val, mvmnt_code, origin_code, gender_code, region_code, person_code, deleted_ind " +
             "FROM tab_character";
     
     private static final String SQL_SELECT_BY_LEAGUE =
@@ -64,17 +64,29 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
     private static final String SQL_UPDATE = 
             "UPDATE tab_character SET char_name = ?, league_code = ?, power_code = ?, pve_cr_val = ?, pvp_cr_val = ?," +
             " skill_val = ?, rank_code = ?, level_val = ?, mvmnt_code = ?, origin_code = ?, gender_code = ?," +
-            " region_code = ?, person_code = ?, active_ind = ?, deleted_ind = ? WHERE char_code = ?";
+            " region_code = ?, person_code = ?, deleted_ind = ? WHERE char_code = ?";
 
     private static final String SQL_INSERT =
             "INSERT INTO tab_character (char_census_id, char_name, league_code, power_code, pve_cr_val, pvp_cr_val," +
-            " skill_val, rank_code, level_val, mvmnt_code, origin_code, gender_code, region_code," +
-            " person_code, active_ind, deleted_ind) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " skill_val, rank_code, level_val, mvmnt_code, origin_code, gender_code, region_code, person_code, deleted_ind) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_UPDATE_STATUS_ACTIVE = 
-            "UPDATE tab_character SET league_code = NULL WHERE league_code = ? AND char_code NOT IN " +
-            "(SELECT char_code FROM tab_character_history WHERE entry_code IN (SELECT MAX(entry_code) FROM tab_entry))";
+    /**
+     * Remove o Id da liga dos membros sem liga (ou que estao em alguma liga desconhecida/nao cadastrada).
+     * No momento da carga de dados de uma liga, consideramos aqui como "sem liga" aquele membro cujo:
+     * 
+     * <ul>
+     *     <li>Id da liga registrado eh o id desta liga;</li>
+     *     <li>Membro nao foi encontrado na carga atual da liga;</li>
+     *     <li>Membro foi encontrado na carga anterior da liga.</li>
+     * </ul>
+     */
+    private static final String SQL_UPDATE_NON_MEMBER = 
+            "UPDATE tab_character SET league_code = NULL WHERE league_code = ? AND char_code NOT IN (" +
+            "SELECT char_code FROM tab_character_history WHERE entry_code IN (" +
+            "SELECT MAX(entry_code) FROM tab_entry)) AND char_code IN (" +
+            "SELECT char_code FROM tab_character_history WHERE entry_code IN (" +
+            "SELECT MAX(entry_code) FROM tab_entry WHERE entry_code NOT IN (SELECT MAX(entry_code) FROM tab_entry)))";
 
     /**
      * TODO DOCUMENT ME!
@@ -374,9 +386,8 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
                 ps.setInt(11, character.getGender().getFlag());
                 ps.setInt(12, character.getRegionId());
                 ps.setInt(13, character.getPersonId());
-                ps.setBoolean(14, character.isActive());
-                ps.setBoolean(15, character.isDeleted());
-                ps.setInt(16, character.getId());
+                ps.setBoolean(14, character.isDeleted());
+                ps.setInt(15, character.getId());
 
                 ps.executeUpdate();
 
@@ -398,8 +409,7 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
                 ps.setInt(12, character.getGender().getFlag());
                 ps.setInt(13, character.getRegionId());
                 ps.setInt(14, character.getPersonId());
-                ps.setBoolean(15, character.isActive());
-                ps.setBoolean(16, character.isDeleted());
+                ps.setBoolean(15, character.isDeleted());
 
                 ps.executeUpdate();
                 character.setId(findLastInsertId());
@@ -418,22 +428,22 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
      * TODO DOCUMENT ME!
      * @throws DAOException
      */
-    public void updateStatus() throws DAOException {
+    public void updateStatusByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
-        Statement st = null;
+        PreparedStatement ps = null;
 
         try {
 
             cn = getConnection();
-            st = cn.createStatement();
-
-            st.executeUpdate(SQL_UPDATE_STATUS_ACTIVE);
+            ps = cn.prepareStatement(SQL_UPDATE_NON_MEMBER);
+            ps.setInt(1, leagueId);
+            ps.executeUpdate();
 
         } catch (SQLException sqle) {
             throw new DAOException("Falha ao atualizar status dos membros da liga.", sqle);
         } finally {
-            closeResources(cn, st, null);
+            closeResources(cn, ps, null);
         }
     }
 
@@ -451,6 +461,7 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
         character.setId(rs.getInt("char_code"));
         character.setCensusId(rs.getLong("char_census_id"));
         character.setName(rs.getString("char_name"));
+        character.setLeagueId(rs.getInt("league_code"));
         character.setPowerId(rs.getInt("power_code"));
         character.setCombatRating(rs.getInt("pve_cr_val"));
         character.setCombatRatingPvP(rs.getInt("pvp_cr_val"));
@@ -462,9 +473,11 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
         character.setGender(DcuoGender.getByFlag(rs.getInt("gender_code")));
         character.setRegionId(rs.getInt("region_code"));
         character.setPersonId(rs.getInt("person_code"));
-        character.setActive(rs.getBoolean("active_ind"));
         character.setDeleted(rs.getBoolean("deleted_ind"));
 
         return character;
+    }
+    public static void main(String[] args) {
+        System.out.println(SQL_UPDATE_NON_MEMBER);
     }
 }

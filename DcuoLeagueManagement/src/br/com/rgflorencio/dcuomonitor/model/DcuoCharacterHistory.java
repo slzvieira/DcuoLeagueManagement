@@ -26,6 +26,9 @@ public class DcuoCharacterHistory implements Serializable {
     /** entry_code     INT. */
     private int entryId;
 
+    /** league_code    INT. */
+    private int leagueId;
+
     /** power_code     INT. */
     private int powerId;
 
@@ -90,6 +93,22 @@ public class DcuoCharacterHistory implements Serializable {
      */
     public void setEntryId(int entryId) {
         this.entryId = entryId;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @return the leagueId
+     */
+    public int getLeagueId() {
+        return leagueId;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @param leagueId the leagueId to set
+     */
+    public void setLeagueId(int leagueId) {
+        this.leagueId = leagueId;
     }
 
     /**

@@ -63,9 +63,6 @@ public class DcuoCharacter implements Serializable {
     private int personId;
 
     /** TODO DOCUMENT ME! */
-    private boolean active;
-
-    /** TODO DOCUMENT ME! */
     private boolean deleted;
 
     /**
@@ -306,22 +303,6 @@ public class DcuoCharacter implements Serializable {
      */
     public void setPersonId(int personId) {
         this.personId = personId;
-    }
-
-    /**
-     * TODO DOCUMENT ME!
-     * @return the active
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
-     * TODO DOCUMENT ME!
-     * @param active the active to set
-     */
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     /**
