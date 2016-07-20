@@ -35,6 +35,11 @@
 			<items>
 				<Accordion SplitPane.resizableWithParent="false"> 
 					<panes>
+                  <TitledPane animated="false" text="Ligas">
+                    <content>
+                        <ListView fx:id="lstLeague" prefHeight="412.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                    </content>
+                  </TitledPane>
 						<TitledPane text="Membros"> 
 							<content>
 										<ListView fx:id="lstMember" layoutX="0.5999999999999996" layoutY="9.6" onKeyReleased="#lstMembroKeyReleased" prefHeight="412.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -45,251 +50,14 @@
                         <ListView fx:id="lstEvent" prefHeight="200.0" prefWidth="200.0" />
                      </content>
                   </TitledPane>
-                  <TitledPane animated="false" text="Liga">
-                    <content>
-                        <ListView fx:id="lstLeague" prefHeight="412.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                    </content>
+                  <TitledPane animated="false" text="Geral">
+                     <content>
+                        <ListView fx:id="lstGeneral" prefHeight="200.0" prefWidth="200.0" />
+                     </content>
                   </TitledPane>
 					</panes>
 				</Accordion>
-            <StackPane fx:id="pnlMain">
-               <children>
-      				<BorderPane opacity="0.0" prefHeight="200.0" prefWidth="200.0"> 
-      					<top>
-      						<AnchorPane prefHeight="137.0" prefWidth="473.0" BorderPane.alignment="CENTER"> 
-      							<children>
-      								<Label fx:id="lblName" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="446.0"> 
-      									<font>
-      										<Font name="System Bold" size="27.0" /> 
-      									</font>
-      								</Label>
-      								<Label layoutX="116.0" layoutY="56.0" prefHeight="25.0" prefWidth="75.0" text="Power:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label layoutX="116.0" layoutY="73.0" prefHeight="25.0" prefWidth="75.0" text="Mentor:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label layoutX="116.0" layoutY="90.0" prefHeight="25.0" prefWidth="75.0" text="Movimento:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label fx:id="lblPower" layoutX="191.0" layoutY="56.0" prefHeight="25.0" prefWidth="80.0" />
-      								<Label fx:id="lblMentor" layoutX="191.0" layoutY="73.0" prefHeight="25.0" prefWidth="80.0" />
-      								<Label fx:id="lblMovement" layoutX="191.0" layoutY="90.0" prefHeight="25.0" prefWidth="80.0" />
-      								<Label layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="50.0" text="CR:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label fx:id="lblPvpCr" layoutX="64.0" layoutY="73.0" prefHeight="25.0" prefWidth="30.0" />
-      								<Label layoutX="14.0" layoutY="73.0" prefHeight="25.0" prefWidth="50.0" text="CR PvP:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label fx:id="lblSkill" layoutX="64.0" layoutY="90.0" prefHeight="25.0" prefWidth="30.0" />
-      								<Label layoutX="14.0" layoutY="90.0" prefHeight="25.0" prefWidth="50.0" text="SP:"> 
-      									<font>
-      										<Font name="System Bold" size="12.0" /> 
-      									</font>
-      								</Label>
-      								<Label fx:id="lblCr" layoutX="64.0" layoutY="56.0" prefHeight="25.0" prefWidth="30.0" />
-                              <CheckBox fx:id="chkCr" layoutX="283.0" layoutY="57.0" mnemonicParsing="false" onAction="#chkFeatureActionPerformed" selected="true" text="Combat Rating" />
-                              <CheckBox fx:id="chkCrPvP" layoutX="283.0" layoutY="77.0" mnemonicParsing="false" onAction="#chkFeatureActionPerformed" selected="true" text="Combat Rating PvP" />
-                              <CheckBox fx:id="chkSkill" layoutX="283.0" layoutY="97.0" mnemonicParsing="false" onAction="#chkFeatureActionPerformed" selected="true" text="Skill Points" />
-                              <DatePicker fx:id="datFeatureStart" layoutX="481.0" layoutY="63.0" onAction="#datFeatureActionPerformed" prefHeight="25.0" prefWidth="104.0" />
-                              <DatePicker fx:id="datFeatureEnd" layoutX="481.0" layoutY="97.0" onAction="#datFeatureActionPerformed" prefHeight="25.0" prefWidth="104.0" />
-                              <Label layoutX="441.0" layoutY="63.0" prefHeight="25.0" prefWidth="40.0" text="Início:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="441.0" layoutY="97.0" prefHeight="25.0" prefWidth="40.0" text="Fim:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-      							</children>
-      						</AnchorPane>
-      					</top>
-      					<center>
-      						<LineChart fx:id="chtMembro" title="Evolução do char" BorderPane.alignment="CENTER"> 
-      							<xAxis>
-      								<CategoryAxis side="BOTTOM" /> 
-      							</xAxis>
-      							<yAxis>
-      								<NumberAxis lowerBound="24.0" side="LEFT" upperBound="171.0" /> 
-      							</yAxis>
-      						</LineChart>
-      					</center>
-      				</BorderPane>
-                  <BorderPane opacity="0.0" prefHeight="200.0" prefWidth="200.0">
-                     <top>
-                        <AnchorPane prefHeight="87.0" prefWidth="521.0" BorderPane.alignment="CENTER">
-                           <children>
-                              <Label fx:id="lblEventDayOfMonth" layoutX="14.0" layoutY="14.0" prefHeight="39.0" prefWidth="492.0" textAlignment="CENTER">
-                                 <font>
-                                    <Font name="System Bold" size="27.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lblEventDayOfWeek" layoutX="14.0" layoutY="53.0" prefHeight="25.0" prefWidth="493.0">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </AnchorPane>
-                     </top>
-                     <center>
-                        <GridPane hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                 <top>
-                                    <Label prefHeight="17.0" prefWidth="298.0" text="Aumentaram CR" BorderPane.alignment="CENTER" />
-                                 </top>
-                                 <center>
-                                    <TextArea fx:id="txtIncreaseCR" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-                                 <top>
-                                    <Label prefHeight="17.0" prefWidth="296.0" text="Aumentaram Skill Points" BorderPane.alignment="CENTER" />
-                                 </top>
-                                 <center>
-                                    <TextArea fx:id="txtIncreaseSP" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                                 <top>
-                                    <Label prefHeight="17.0" prefWidth="333.0" text="Entraram na Liga" BorderPane.alignment="CENTER" />
-                                 </top>
-                                 <center>
-                                    <TextArea fx:id="txtEnterLeague" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <top>
-                                    <Label prefHeight="17.0" prefWidth="294.0" text="Saíram da Liga" BorderPane.alignment="CENTER" />
-                                 </top>
-                                 <center>
-                                    <TextArea fx:id="txtExitLeague" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                                 </center>
-                              </BorderPane>
-                           </children>
-                           <BorderPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </BorderPane.margin>
-                        </GridPane>
-                     </center>
-                  </BorderPane>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0">
-                     <center>
-                        <LineChart fx:id="chtLeague" BorderPane.alignment="CENTER">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </LineChart>
-                     </center>
-                     <top>
-                        <AnchorPane prefHeight="141.0" prefWidth="521.0">
-                           <children>
-                              <Label layoutX="14.0" layoutY="13.0" text="Evolução da Liga" textAlignment="CENTER">
-                                 <font>
-                                    <Font name="System Bold" size="27.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="14.0" layoutY="52.0" text="Membros:">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lblTotalMembers" layoutX="99.0" layoutY="52.0" prefHeight="25.0" prefWidth="46.0">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lblCrAverage" layoutX="272.0" layoutY="52.0" prefHeight="25.0" prefWidth="55.0">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="154.0" layoutY="52.0" text="CR Médio:">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="154.0" layoutY="77.0" text="CR PvP Médio:">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lblCrPvPAverage" layoutX="272.0" layoutY="77.0" prefHeight="25.0" prefWidth="55.0">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="154.0" layoutY="102.0" text="SP Médio:">
-                                 <font>
-                                    <Font name="System Bold" size="16.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="lblSkillAverage" layoutX="272.0" layoutY="102.0" prefHeight="25.0" prefWidth="55.0">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                              <CheckBox fx:id="chkCrAverage" layoutX="353.0" layoutY="46.0" mnemonicParsing="false" onAction="#chkAverageActionPerformed" selected="true" text="Combat Rating" />
-                              <CheckBox fx:id="chkCrPvPAverage" layoutX="353.0" layoutY="66.0" mnemonicParsing="false" onAction="#chkAverageActionPerformed" selected="true" text="Combat Rating PvP" />
-                              <CheckBox fx:id="chkSkillAverage" layoutX="353.0" layoutY="86.0" mnemonicParsing="false" onAction="#chkAverageActionPerformed" selected="true" text="Skill Points" />
-                              <CheckBox fx:id="chkTotal" layoutX="353.0" layoutY="106.0" mnemonicParsing="false" onAction="#chkAverageActionPerformed" selected="true" text="Total of Members" />
-                              <Label layoutX="499.0" layoutY="51.0" prefHeight="25.0" prefWidth="40.0" text="Início:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="499.0" layoutY="94.0" prefHeight="25.0" prefWidth="40.0" text="Fim:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <DatePicker fx:id="datStatisticStart" layoutX="539.0" layoutY="52.0" onAction="#datAverageActionPerformed" prefHeight="25.0" prefWidth="104.0" />
-                              <DatePicker fx:id="datStatisticEnd" layoutX="539.0" layoutY="95.0" onAction="#datAverageActionPerformed" prefHeight="25.0" prefWidth="104.0" />
-                           </children>
-                        </AnchorPane>
-                     </top>
-                  </BorderPane>
-                  <BorderPane opacity="0.0" prefHeight="200.0" prefWidth="200.0">
-                     <center>
-                        <TableView fx:id="tblRanking" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <columns>
-                            <TableColumn fx:id="colName" prefWidth="150.0" text="Name" />
-                            <TableColumn fx:id="colPower" prefWidth="100.0" text="Power" />
-                              <TableColumn fx:id="colLevel" prefWidth="68.0" text="Level" />
-                              <TableColumn fx:id="colCr" prefWidth="71.0" style="-fx-alignment: CENTER-RIGHT;" text="CR" />
-                              <TableColumn fx:id="colCrPvp" prefWidth="63.0" text="CR PvP" />
-                              <TableColumn fx:id="colSkill" prefWidth="78.0" text="Skill Points" />
-                              <TableColumn fx:id="colRank" prefWidth="50.0" text="Rank" />
-                          </columns>
-                        </TableView>
-                     </center></BorderPane>
-               </children>
-            </StackPane>
+            <StackPane fx:id="pnlMain" />
 			</items>
 		</SplitPane>
    </center>

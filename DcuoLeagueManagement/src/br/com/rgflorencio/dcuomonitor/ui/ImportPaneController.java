@@ -5,7 +5,11 @@
  */
 package br.com.rgflorencio.dcuomonitor.ui;
 
-import java.io.PrintStream;
+import java.io.File;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javafx.event.ActionEvent;
@@ -18,8 +22,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterInputData;
+import javafx.stage.FileChooser;
+
+import javax.swing.JOptionPane;
+
+import br.com.rgflorencio.dcuomonitor.model.DcuoLeague;
 import br.com.rgflorencio.dcuomonitor.service.ImportService;
+import br.com.rgflorencio.dcuomonitor.service.ServiceException;
 
 /**
  * TODO DOCUMENT ME!
@@ -52,41 +61,62 @@ public class ImportPaneController extends BorderPane {
     @FXML
     private Button btnImport;
 
-    /** TODO DOCUMENT ME! */
     private MainPaneController rootController;
-    
-//    public ImportPaneController(MainPaneController rootController) {
-//        super();
-//        this.rootController = rootController;
-//    }
+    private FileChooser fileChooser = new FileChooser();
+    private File initialDirectory;
 
     void setRoot(MainPaneController rootController) {
         this.rootController = rootController;
     }
 
     @FXML
+    void btnFileNameOnAction(ActionEvent event) {
+
+        if (initialDirectory != null) {
+            fileChooser.setInitialDirectory(initialDirectory);
+        }
+
+        File file = fileChooser.showOpenDialog(txtFileName.getScene().getWindow());
+
+        if (file != null) {
+            initialDirectory = file.getParentFile();
+            txtFileName.setText(file.getAbsolutePath());
+        }
+    }
+
+    @FXML
     void btnImportOnAction(ActionEvent event) {
 
-        btnImport.getScene().setCursor(Cursor.WAIT);
+        try {
 
-        try (PrintStream stream = new TxtCourseOutputStream(txtCourse).getPrintStream()) {
+            btnImport.getScene().setCursor(Cursor.WAIT);
 
-//            Calendar baseCalendar = Calendar.getInstance();
-//            baseCalendar.set(2015, 4, 18, 9, 0, 0);
-//            Date baseDate = baseCalendar.getTime();
+            List<String> errorMessageList = validateImportFields();
+            if (errorMessageList != null && !errorMessageList.isEmpty()) {
+                StringBuilder builder = new StringBuilder(errorMessageList.get(0));
+                for (int i = 1; i < errorMessageList.size(); i++) {
+                    builder.append("\n");
+                    builder.append(errorMessageList.get(i));
+                }
+                JOptionPane.showMessageDialog(null, builder.toString());
+                return;
+            }
 
+            DcuoLeague league = rootController.lstLeague.getSelectionModel().getSelectedItem();
             ImportService service = new ImportService();
 
-//            List<DcuoCharacterInputData> characterList = service.loadGuildListFromFile(new File(
-//                "C:\\Sandro\\Dropbox\\Documents\\dcuo\\MyProject\\guild_roster_2015_05_18.xml"));
-            List<DcuoCharacterInputData> characterList = service.loadGuildList(stream);
-            service.saveGuildList(characterList, null, stream);
+            if (chkImportTypeOnLine.isSelected()) {
+                service.loadGuildDataCurrent(league);
+            } else {
+                File baseFile = new File(txtFileName.getText());
+                Date baseDate = Date.from(txtBaseDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                service.loadGuildDataFromFile(league, baseFile, baseDate);
+            }
 
-            rootController.refreshMemberList();
-            rootController.refreshEventList();
+            JOptionPane.showMessageDialog(null, "Importação realizada com sucesso");
 
-        } catch (Exception e) {
-//            rootController.showMessage(e.getMessage());
+        } catch (ServiceException e) {
+            JOptionPane.showMessageDialog(null, "Falha ao importar dados");
             e.printStackTrace();
         } finally {
             btnImport.getScene().setCursor(Cursor.DEFAULT);
@@ -105,5 +135,31 @@ public class ImportPaneController extends BorderPane {
             btnFileName.setDisable(false);
             txtBaseDate.setDisable(false);
         }
+    }
+
+    private List<String> validateImportFields() {
+
+        List<String> errorMessageList = new ArrayList<>();
+
+        DcuoLeague league = rootController.lstLeague.getSelectionModel().getSelectedItem();
+        if (league == null) {
+            errorMessageList.add("Selecione uma liga para importação.");
+        }
+
+        if (chkImportTypeOnLine.isSelected()) {
+            return errorMessageList;
+        }
+
+        File file = new File(txtFileName.getText());
+        if (!file.isFile()) {
+            errorMessageList.add("Informe corretamente o nome do arquivo de importação.");
+        }
+
+        LocalDate baseDate = txtBaseDate.getValue();
+        if (baseDate == null) {
+            errorMessageList.add("Informe a data base referente aos dados contidos no arquivo.");
+        }
+
+        return errorMessageList;
     }
 }

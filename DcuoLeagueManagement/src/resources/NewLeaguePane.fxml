@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root prefHeight="300.0" prefWidth="400.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.rgflorencio.dcuomonitor.ui.NewLeaguePaneController">
+   <center>
+      <AnchorPane prefHeight="196.0" prefWidth="310.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Nova Liga">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
+            </Label>
+            <Label layoutX="18.0" layoutY="73.0" text="ID Census" />
+            <TextField fx:id="txtCensusId" layoutX="18.0" layoutY="90.0" prefHeight="25.0" prefWidth="255.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="127.0" />
+            <Button fx:id="btnCheckLeague" layoutX="286.0" layoutY="90.0" mnemonicParsing="false" onAction="#btnCheckLeagueOnAction" prefHeight="25.0" prefWidth="100.0" text="Verificar" AnchorPane.rightAnchor="14.0" />
+            <Label fx:id="lblCensusIdTitle" layoutX="18.0" layoutY="138.0" text="ID Census:" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblCensusId" layoutX="106.0" layoutY="138.0" prefHeight="25.0" prefWidth="280.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblNameTitle" layoutX="18.0" layoutY="163.0" text="Nome:" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblName" layoutX="106.0" layoutY="163.0" prefHeight="25.0" prefWidth="280.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblFactionTitle" layoutX="18.0" layoutY="188.0" text="Facção:" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblFaction" layoutX="106.0" layoutY="188.0" prefHeight="25.0" prefWidth="280.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblWorldTitle" layoutX="19.0" layoutY="213.0" text="Mundo:" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblWorld" layoutX="106.0" layoutY="213.0" prefHeight="25.0" prefWidth="280.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnRegisterLeague" alignment="CENTER" layoutX="150.0" layoutY="247.0" mnemonicParsing="false" onAction="#btnRegisterLeagueOnAction" prefHeight="25.0" prefWidth="100.0" text="Registrar" visible="false" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</fx:root>

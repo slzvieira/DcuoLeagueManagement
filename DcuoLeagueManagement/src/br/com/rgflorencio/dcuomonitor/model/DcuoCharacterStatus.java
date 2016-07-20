@@ -13,7 +13,7 @@ package br.com.rgflorencio.dcuomonitor.model;
 public class DcuoCharacterStatus {
 
     private int id;
-    private long dcuoId;
+    private long censusId;
     private String name;
     private String powerName;
     private int combatRating;
@@ -46,18 +46,18 @@ public class DcuoCharacterStatus {
 
     /**
      * TODO DOCUMENT ME!
-     * @return the dcuoId
+     * @return the censusId
      */
-    public long getDcuoId() {
-        return dcuoId;
+    public long getCensusId() {
+        return censusId;
     }
 
     /**
      * TODO DOCUMENT ME!
-     * @param dcuoId the dcuoId to set
+     * @param censusId the censusId to set
      */
-    public void setDcuoId(long dcuoId) {
-        this.dcuoId = dcuoId;
+    public void setCensusId(long censusId) {
+        this.censusId = censusId;
     }
 
     /**

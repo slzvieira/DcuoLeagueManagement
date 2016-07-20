@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="200.0" prefWidth="200.0" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.com.rgflorencio.dcuomonitor.ui.EventPaneController">
    <center>
       <GridPane hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -72,4 +72,4 @@
          </children>
       </AnchorPane>
    </top>
-</BorderPane>
+</fx:root>

@@ -47,8 +47,15 @@ public class PropertiesManager extends Properties {
      * TODO DOCUMENT ME!
      * @return
      */
-    public String getGuildUrl() {
-        return MessageFormat.format(getProperty("census.guild.roster.query"), getProperty("census.domain"),
-            getProperty("census.guild.id"));
+    public String getGuildUrl(String guildId) {
+        return MessageFormat.format(getProperty("census.guild.query"), getProperty("census.domain"), guildId);
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @return
+     */
+    public String getGuildRosterUrl(String guildId) {
+        return MessageFormat.format(getProperty("census.guild.roster.query"), getProperty("census.domain"), guildId);
     }
 }

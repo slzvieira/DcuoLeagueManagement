@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
@@ -25,11 +24,26 @@ import org.apache.commons.digester3.Digester;
 import org.xml.sax.SAXException;
 
 import br.com.rgflorencio.dcuomonitor.PropertiesManager;
+import br.com.rgflorencio.dcuomonitor.dao.DAOException;
+import br.com.rgflorencio.dcuomonitor.dao.census.CensusDAOFactory;
+import br.com.rgflorencio.dcuomonitor.dao.census.CensusLeagueDAO;
+import br.com.rgflorencio.dcuomonitor.dao.census.ruleset.FeatListRuleSet;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterHistoryDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoDAOFactory;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoEntryDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoMovementDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoOriginDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoPersonDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoPowerDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoRankDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoRegionDAO;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacter;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterHistory;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterInputData;
 import br.com.rgflorencio.dcuomonitor.model.DcuoEntry;
 import br.com.rgflorencio.dcuomonitor.model.DcuoGender;
+import br.com.rgflorencio.dcuomonitor.model.DcuoLeague;
 import br.com.rgflorencio.dcuomonitor.model.DcuoMovement;
 import br.com.rgflorencio.dcuomonitor.model.DcuoOrigin;
 import br.com.rgflorencio.dcuomonitor.model.DcuoPerson;
@@ -37,17 +51,6 @@ import br.com.rgflorencio.dcuomonitor.model.DcuoPower;
 import br.com.rgflorencio.dcuomonitor.model.DcuoRank;
 import br.com.rgflorencio.dcuomonitor.model.DcuoRegion;
 import br.com.rgflorencio.dcuomonitor.model.Feat;
-import br.com.rgflorencio.dcuomonitor.persistence.DAOException;
-import br.com.rgflorencio.dcuomonitor.persistence.DAOFactory;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoCharacterDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoCharacterHistoryDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoEntryDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoMovementDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoOriginDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoPersonDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoPowerDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoRankDAO;
-import br.com.rgflorencio.dcuomonitor.persistence.DcuoRegionDAO;
 
 /**
  * TODO DOCUMENT ME!
@@ -102,7 +105,7 @@ public class ImportService {
      * @return
      * @throws SAXException 
      */
-    public Collection<Feat> importFeatList() throws IOException, SAXException {
+    public Collection<Feat> importFeatList(String leagueCensusId) throws IOException, SAXException {
 
         System.setProperty("http.proxySet", "true");
         System.setProperty("java.net.useSystemProxies", "true");
@@ -117,7 +120,7 @@ public class ImportService {
             }
         });
 
-        URL url = new URL(PropertiesManager.getInstance().getGuildUrl());
+        URL url = new URL(PropertiesManager.getInstance().getGuildRosterUrl(leagueCensusId));
 
         HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
         httpConnection.connect();
@@ -138,42 +141,43 @@ public class ImportService {
 
     /**
      * TODO DOCUMENT ME!
-     * @return
-     * @throws SAXException 
+     * @param league
+     * @throws ServiceException
      */
-    public List<DcuoCharacterInputData> loadGuildList(PrintStream out) throws IOException, SAXException {
+    public void loadGuildDataCurrent(DcuoLeague league) throws ServiceException {
 
-//        System.setProperty("http.proxySet", "true");
-//        System.setProperty("java.net.useSystemProxies", "true");
-//        System.setProperty("http.proxyHost", PROXY_HOST);
-//        System.setProperty("http.proxyPort", Integer.toString(PROXY_PORT));
-//        System.setProperty("http.proxyUser", PROXY_USER);
-//        System.setProperty("http.proxyPassword", PROXY_PASS);
-//
-//        Authenticator.setDefault(new Authenticator() {
-//            public PasswordAuthentication getPasswordAuthentication() {
-//                return new PasswordAuthentication(PROXY_USER, PROXY_PASS.toCharArray());
-//            }
-//        });
+        try {
 
-        URL url = new URL(PropertiesManager.getInstance().getGuildUrl());
+            CensusLeagueDAO censusDAO = CensusDAOFactory.getInstance().getCensusLeagueDAO();
+            List<DcuoCharacterInputData> characterList = censusDAO.findCharacterListByCensusId(Long.toString(league.getCensusId()));
+            saveGuildList(characterList, league, new Date());
 
-        HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
-        httpConnection.connect();
+        } catch (DAOException daoe) {
+            throw new ServiceException(daoe);
+        }
+    }
 
-        List<DcuoCharacterInputData> characterList = new ArrayList<DcuoCharacterInputData>();
-        Digester digester = new Digester();
-        digester.push(characterList);
-        digester.addRuleSet(new DcuoCharacterEntryRuleSet());
-        
-        InputStream inputStream = (InputStream) httpConnection.getContent();
-//        displayContent(inputStream); if (true) return characterList;
-        digester.parse(inputStream);
-        Collections.sort(characterList);
+    /**
+     * TODO DOCUMENT ME!
+     * 
+     * @param league
+     * @param file
+     * @param baseDate
+     * @throws ServiceException
+     */
+    public void loadGuildDataFromFile(DcuoLeague league, File file, Date baseDate)
+            throws ServiceException {
 
-        inputStream.close();
-        httpConnection.disconnect();
-        return characterList;
+        try {
+
+            CensusLeagueDAO censusDAO = CensusDAOFactory.getInstance().getCensusLeagueDAO();
+            List<DcuoCharacterInputData> characterList = censusDAO.findCharacterListByCensusId(
+                Long.toString(league.getCensusId()), file);
+            saveGuildList(characterList, league, baseDate);
+
+        } catch (DAOException daoe) {
+            throw new ServiceException(daoe);
+        }
     }
 
     public String loadQuantityCharsByCr(Integer crPve) throws IOException, SAXException {
@@ -190,34 +194,19 @@ public class ImportService {
 
     /**
      * TODO DOCUMENT ME!
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws SAXException
-     */
-    public List<DcuoCharacterInputData> loadGuildListFromFile(File file) throws IOException, SAXException {
-
-        List<DcuoCharacterInputData> characterList = new ArrayList<DcuoCharacterInputData>();
-
-        Digester digester = new Digester();
-        digester.push(characterList);
-        digester.addRuleSet(new DcuoCharacterEntryRuleSet());
-        digester.parse(file);
-
-        Collections.sort(characterList);
-        return characterList;
-    }
-
-    /**
-     * TODO DOCUMENT ME!
+     * 
      * @param entryList
-     * @throws ServiceException 
+     * @param league
+     * @param baseDate
+     * 
+     * @throws ServiceException
      */
-    public void saveGuildList(List<DcuoCharacterInputData> entryList, Date baseDate, PrintStream out) throws ServiceException {
+    public void saveGuildList(List<DcuoCharacterInputData> entryList, DcuoLeague league, Date baseDate)
+            throws ServiceException {
 
-        DcuoEntryDAO entryDAO = DAOFactory.getInstance().getDcuoEntryDAO();
-        DcuoCharacterDAO characterDAO = DAOFactory.getInstance().getDcuoCharacterDAO();
-        DcuoCharacterHistoryDAO characterHistoryDAO = DAOFactory.getInstance().getDcuoCharacterHistoryDAO();
+        DcuoEntryDAO entryDAO = DcuoDAOFactory.getInstance().getDcuoEntryDAO();
+        DcuoCharacterDAO characterDAO = DcuoDAOFactory.getInstance().getDcuoCharacterDAO();
+        DcuoCharacterHistoryDAO characterHistoryDAO = DcuoDAOFactory.getInstance().getDcuoCharacterHistoryDAO();
         DcuoEntry entry = new DcuoEntry();
         DcuoCharacter character = null;
         DcuoCharacterHistory characterHistory = null;
@@ -243,7 +232,7 @@ public class ImportService {
 
             for (DcuoCharacterInputData characterInputData : entryList) {
 
-                out.println("Persisting char " + characterInputData.getName() + "...");
+//                out.println("Persisting char " + characterInputData.getName() + "...");
                 
                 movementId = findMovementId(characterInputData.getMovementMode());
                 originId = findOriginId(characterInputData.getOrigin());
@@ -253,7 +242,7 @@ public class ImportService {
                 rankId = findRankId(characterInputData.getRank());
 
                 character = new DcuoCharacter();
-                character.setDcuoId(characterInputData.getCharacterId());
+                character.setCensusId(characterInputData.getCharacterId());
 
                 if (characterInputData.isDeleted() && characterInputData.getName() != null && characterInputData.getName().length() > 29) {
                     character.setName(characterInputData.getName().substring(0, characterInputData.getName().length() - 29));
@@ -261,6 +250,7 @@ public class ImportService {
                     character.setName(characterInputData.getName());
                 }
 
+                character.setLeagueId(league.getId());
                 character.setPowerId(powerTypeId);
                 character.setCombatRating(characterInputData.getCombatRating());
                 character.setCombatRatingPvP(characterInputData.getPvpCombatRating());
@@ -288,9 +278,9 @@ public class ImportService {
                 characterHistoryDAO.persist(characterHistory);
             }
 
-            out.println("Atualizando status dos membros da liga...");
+//            out.println("Atualizando status dos membros da liga...");
             characterDAO.updateStatus();
-            out.println("Status atualizados. Importação concluída com sucesso.");
+//            out.println("Status atualizados. Importação concluída com sucesso.");
             entryDAO.commitTransaction();
 
         } catch (DAOException daoe) {
@@ -307,7 +297,7 @@ public class ImportService {
      */
     private int findMovementId(String movementMode) throws DAOException {
 
-        DcuoMovementDAO dao = DAOFactory.getInstance().getDcuoMovementDAO();
+        DcuoMovementDAO dao = DcuoDAOFactory.getInstance().getDcuoMovementDAO();
         DcuoMovement movement = dao.findByName(movementMode);
 
         if (movement == null) {
@@ -327,7 +317,7 @@ public class ImportService {
      */
     private int findOriginId(String originName) throws DAOException {
 
-        DcuoOriginDAO dao = DAOFactory.getInstance().getDcuoOriginDAO();
+        DcuoOriginDAO dao = DcuoDAOFactory.getInstance().getDcuoOriginDAO();
         DcuoOrigin origin = dao.findByName(originName);
 
         if (origin == null) {
@@ -347,7 +337,7 @@ public class ImportService {
      */
     private int findRegion(String regionName) throws DAOException {
 
-        DcuoRegionDAO dao = DAOFactory.getInstance().getDcuoRegionDAO();
+        DcuoRegionDAO dao = DcuoDAOFactory.getInstance().getDcuoRegionDAO();
         DcuoRegion region = dao.findByName(regionName);
 
         if (region == null) {
@@ -367,7 +357,7 @@ public class ImportService {
      */
     private int findPersonality(String personalityName) throws DAOException {
 
-        DcuoPersonDAO dao = DAOFactory.getInstance().getDcuoPersonDAO();
+        DcuoPersonDAO dao = DcuoDAOFactory.getInstance().getDcuoPersonDAO();
         DcuoPerson person = dao.findByName(personalityName);
 
         if (person == null) {
@@ -387,7 +377,7 @@ public class ImportService {
      */
     private int findPowerType(String powerName) throws DAOException {
 
-        DcuoPowerDAO dao = DAOFactory.getInstance().getDcuoPowerDAO();
+        DcuoPowerDAO dao = DcuoDAOFactory.getInstance().getDcuoPowerDAO();
         DcuoPower power = dao.findByName(powerName);
 
         if (power == null) {
@@ -407,7 +397,7 @@ public class ImportService {
      */
     private int findRankId(int rankId) throws DAOException {
 
-        DcuoRankDAO dao = DAOFactory.getInstance().getDcuoRankDAO();
+        DcuoRankDAO dao = DcuoDAOFactory.getInstance().getDcuoRankDAO();
         DcuoRank rank = dao.findById(rankId);
 
         if (rank == null) {

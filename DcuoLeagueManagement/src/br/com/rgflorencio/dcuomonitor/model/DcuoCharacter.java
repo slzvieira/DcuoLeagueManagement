@@ -20,11 +20,14 @@ public class DcuoCharacter implements Serializable {
     /** char_code    INT PRIMARY KEY AUTO_INCREMENT. */
     private int id;
 
-    /** char_dcuo_id BIGINT. */
-    private long dcuoId;
+    /** char_census_id BIGINT. */
+    private long censusId;
 
     /** char_name    VARCHAR(30). */
     private String name;
+
+    /** league_code    INT. */
+    private int leagueId;
 
     /** power_code   INT. */
     private int powerId;
@@ -83,18 +86,18 @@ public class DcuoCharacter implements Serializable {
 
     /**
      * TODO DOCUMENT ME!
-     * @return the dcuoId
+     * @return the censusId
      */
-    public long getDcuoId() {
-        return dcuoId;
+    public long getCensusId() {
+        return censusId;
     }
 
     /**
      * TODO DOCUMENT ME!
-     * @param dcuoId the dcuoId to set
+     * @param censusId the censusId to set
      */
-    public void setDcuoId(long dcuoId) {
-        this.dcuoId = dcuoId;
+    public void setCensusId(long censusId) {
+        this.censusId = censusId;
     }
 
     /**
@@ -111,6 +114,22 @@ public class DcuoCharacter implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @return the leagueId
+     */
+    public int getLeagueId() {
+        return leagueId;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @param leagueId the leagueId to set
+     */
+    public void setLeagueId(int leagueId) {
+        this.leagueId = leagueId;
     }
 
     /**

@@ -68,7 +68,6 @@ CREATE TABLE tab_character (
     gender_code    INT,
     region_code    INT,
     person_code    INT,
-    active_ind     INT(1),
     deleted_ind	   INT(1)
 );
 
