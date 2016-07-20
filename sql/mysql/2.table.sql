@@ -39,28 +39,37 @@ CREATE TABLE tab_person (
     person_name VARCHAR(60)
 );
 
+CREATE TABLE tab_league (
+    league_code      INT PRIMARY KEY AUTO_INCREMENT,
+    league_census_id BIGINT,
+    league_name      VARCHAR(30),
+    world_code       INT NOT NULL,
+    alignment_code   INT NOT NULL
+);
+
 CREATE TABLE tab_entry (
     entry_code INT PRIMARY KEY AUTO_INCREMENT,
     entry_date DATETIME
 );
 
 CREATE TABLE tab_character (
-    char_code    INT PRIMARY KEY AUTO_INCREMENT,
-    char_dcuo_id BIGINT,
-    char_name    VARCHAR(30),
-    power_code   INT,
-    pve_cr_val   INT,
-    pvp_cr_val   INT,
-    skill_val    INT,
-    rank_code    INT,
-    level_val    INT,
-    mvmnt_code   INT,
-    origin_code  INT,
-    gender_code  INT,
-    region_code  INT,
-    person_code  INT,
-    active_ind   INT(1),
-    deleted_ind	 INT(1)
+    char_code      INT PRIMARY KEY AUTO_INCREMENT,
+    char_census_id BIGINT,
+    char_name      VARCHAR(30),
+    league_code    INT,
+    power_code     INT,
+    pve_cr_val     INT,
+    pvp_cr_val     INT,
+    skill_val      INT,
+    rank_code      INT,
+    level_val      INT,
+    mvmnt_code     INT,
+    origin_code    INT,
+    gender_code    INT,
+    region_code    INT,
+    person_code    INT,
+    active_ind     INT(1),
+    deleted_ind	   INT(1)
 );
 
 ALTER TABLE tab_character
@@ -93,10 +102,16 @@ ADD CONSTRAINT fk_character_person
     FOREIGN KEY (person_code)
         REFERENCES tab_person (person_code);
 
+ALTER TABLE tab_character
+ADD CONSTRAINT fk_character_league
+    FOREIGN KEY (league_code)
+        REFERENCES tab_league (league_code);
+
 CREATE TABLE tab_character_history (
     char_hist_code INT PRIMARY KEY AUTO_INCREMENT,
     char_code      INT,
     entry_code     INT,
+    league_code    INT,
     power_code     INT,
     pve_cr_val     INT,
     pvp_cr_val     INT,
