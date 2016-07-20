@@ -35,18 +35,18 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
             " level_val, mvmnt_code, origin_code, gender_code, region_code, person_code, active_ind, deleted_ind " +
             "FROM tab_character";
     
-    private static final String SQL_SELECT_ACTIVE_STATUS =
+    private static final String SQL_SELECT_BY_LEAGUE =
             "SELECT c.char_code, c.char_census_id, c.char_name, p.power_name, c.pve_cr_val, c.pvp_cr_val, c.skill_val," + 
             " c.rank_code, c.level_val, m.mvmnt_name, o.origin_name, c.gender_code, r.region_name, pe.person_name, rk.rank_name " + 
-            "FROM tab_character c " + // JOIN tab_character_history ch ON c.char_code = ch.char_code " +
+            "FROM tab_character c " +
             "JOIN tab_power p ON c.power_code = p.power_code " + 
             "JOIN tab_movement m ON c.mvmnt_code = m.mvmnt_code " + 
             "JOIN tab_origin o ON c.origin_code = o.origin_code " + 
             "JOIN tab_region r ON c.region_code = r.region_code " + 
             "JOIN tab_person pe ON c.person_code = pe.person_code " +
             "JOIN tab_rank rk ON c.rank_code = rk.rank_code " +
-            "WHERE" + // ch.entry_code IN (SELECT MAX(entry_code) FROM tab_entry WHERE entry_date < ADDDATE(CURRENT_DATE, -6)) AND" +
-            " c.league_code = ? AND c.active_ind = 1 AND c.deleted_ind = 0 " + // AND (c.pve_cr_val <> ch.pve_cr_val OR c.pvp_cr_val <> ch.pvp_cr_val OR c.skill_val <> ch.skill_val) " +
+            "WHERE" +
+            " c.league_code = ? AND c.deleted_ind = 0 " +
             "ORDER BY char_name";
 
     private static final String SQL_SELECT_ENTRIES_BY_CHARACTER_ID = 
@@ -210,9 +210,9 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
     }
 
     /* (non-Javadoc)
-     * @see br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterDAO#findAllActiveStatusByLeagueId(int)
+     * @see br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterDAO#findByLeagueId(int)
      */
-    public List<DcuoCharacterStatus> findAllActiveStatusByLeagueId(int leagueId) throws DAOException {
+    public List<DcuoCharacterStatus> findByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
         PreparedStatement ps = null;
@@ -223,7 +223,7 @@ public class DcuoCharacterMySqlDAO extends AbstractMySqlDAO implements DcuoChara
         try {
 
             cn = getConnection();
-            ps = cn.prepareStatement(SQL_SELECT_ACTIVE_STATUS);
+            ps = cn.prepareStatement(SQL_SELECT_BY_LEAGUE);
             ps.setInt(1, leagueId);
             rs = ps.executeQuery();
 

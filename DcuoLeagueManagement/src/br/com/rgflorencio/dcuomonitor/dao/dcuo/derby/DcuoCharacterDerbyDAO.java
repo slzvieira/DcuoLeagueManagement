@@ -214,7 +214,7 @@ public class DcuoCharacterDerbyDAO extends AbstractDerbyDAO implements DcuoChara
     }
 
     @Override
-    public List<DcuoCharacterStatus> findAllActiveStatusByLeagueId(int leagueId) throws DAOException {
+    public List<DcuoCharacterStatus> findByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
         Statement st = null;

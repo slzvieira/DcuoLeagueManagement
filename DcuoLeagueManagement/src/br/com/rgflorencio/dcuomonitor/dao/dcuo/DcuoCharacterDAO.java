@@ -28,7 +28,7 @@ public interface DcuoCharacterDAO extends TransactionalDAO {
      * @return
      * @throws DAOException 
      */
-    List<DcuoCharacterStatus> findAllActiveStatusByLeagueId(int leagueId) throws DAOException;
+    List<DcuoCharacterStatus> findByLeagueId(int leagueId) throws DAOException;
 
     /**
      * TODO DOCUMENT ME!

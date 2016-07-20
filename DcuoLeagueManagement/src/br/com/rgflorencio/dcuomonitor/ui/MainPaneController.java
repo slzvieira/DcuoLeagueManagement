@@ -226,7 +226,7 @@ public class MainPaneController extends BorderPane {
     private void loadLeague(DcuoLeague league) throws DAOException {
 
         DcuoCharacterDAO characterDAO = DcuoDAOFactory.getInstance().getDcuoCharacterDAO();
-        List<DcuoCharacterStatus> characterList = characterDAO.findAllActiveStatusByLeagueId(league.getId());
+        List<DcuoCharacterStatus> characterList = characterDAO.findByLeagueId(league.getId());
         lstMember.setItems(FXCollections.observableArrayList(characterList));
 
         List<String> generalList = new ArrayList<>(2);
