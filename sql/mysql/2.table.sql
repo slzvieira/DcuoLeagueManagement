@@ -48,9 +48,15 @@ CREATE TABLE tab_league (
 );
 
 CREATE TABLE tab_entry (
-    entry_code INT PRIMARY KEY AUTO_INCREMENT,
-    entry_date DATETIME
+    entry_code  INT PRIMARY KEY AUTO_INCREMENT,
+    entry_date  DATETIME,
+    league_code INT
 );
+
+ALTER TABLE tab_entry
+ADD CONSTRAINT fk_entry_league
+    FOREIGN KEY (league_code)
+        REFERENCES tab_league (league_code);
 
 CREATE TABLE tab_character (
     char_code      INT PRIMARY KEY AUTO_INCREMENT,

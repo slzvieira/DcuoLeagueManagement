@@ -24,6 +24,9 @@ public class DcuoEntry implements Serializable {
     /** entry_date DATETIME. */
     private Date dateTime;
 
+    /** league_code INT */
+    private int leagueId;
+
     /**
      * TODO DOCUMENT ME!
      * @return the id
@@ -54,5 +57,21 @@ public class DcuoEntry implements Serializable {
      */
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @return the leagueId
+     */
+    public int getLeagueId() {
+        return leagueId;
+    }
+
+    /**
+     * TODO DOCUMENT ME!
+     * @param leagueId the leagueId to set
+     */
+    public void setLeagueId(int leagueId) {
+        this.leagueId = leagueId;
     }
 }

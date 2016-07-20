@@ -160,7 +160,7 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
     public List<DcuoEntryEvent> findEventsByLeagueId(int leagueId) throws DAOException {
 
         Connection cn = null;
-        Statement st = null;
+        PreparedStatement ps = null;
         ResultSet rs = null;
         List<DcuoEntryEvent> itemList = new ArrayList<>();
         DcuoEntryEvent item;
@@ -168,8 +168,9 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
         try {
 
             cn = getConnection();
-            st = cn.createStatement();
-            rs = st.executeQuery("SELECT entry_code, entry_date FROM tab_entry ORDER BY entry_date DESC");
+            ps = cn.prepareStatement("SELECT entry_code, entry_date FROM tab_entry WHERE league_code = ? ORDER BY entry_date DESC");
+            ps.setInt(1, leagueId);
+            rs = ps.executeQuery();
 
             if (!rs.next()) {
                 return itemList;
@@ -180,30 +181,34 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
             item.setCurrentEntry(new DcuoEntry());
             item.getCurrentEntry().setId(rs.getInt("entry_code"));
             item.getCurrentEntry().setDateTime(rs.getTimestamp("entry_date"));
+            item.getCurrentEntry().setLeagueId(leagueId);
 
             while (rs.next()) {
 
                 item.setPreviousEntry(new DcuoEntry());
                 item.getPreviousEntry().setId(rs.getInt("entry_code"));
                 item.getPreviousEntry().setDateTime(rs.getTimestamp("entry_date"));
+                item.getPreviousEntry().setLeagueId(leagueId);
                 itemList.add(item);
 
                 item = new DcuoEntryEvent();
                 item.setCurrentEntry(new DcuoEntry());
                 item.getCurrentEntry().setId(rs.getInt("entry_code"));
                 item.getCurrentEntry().setDateTime(rs.getTimestamp("entry_date"));
+                item.getCurrentEntry().setLeagueId(leagueId);
             }
 
             item.setPreviousEntry(new DcuoEntry());
             item.getPreviousEntry().setId(0);
             item.getPreviousEntry().setDateTime(null);
+            item.getPreviousEntry().setLeagueId(leagueId);
             itemList.add(item);
             return itemList;
 
         } catch (SQLException sqle) {
             throw new DAOException("Falha ao obter lista de eventos.", sqle);
         } finally {
-            closeResources(cn, st, rs);
+            closeResources(cn, ps, rs);
         }
     }
 
