@@ -226,6 +226,8 @@ public class ImportService {
             } else {
                 entry.setDateTime(baseDate);
             }
+            
+            entry.setLeagueId(league.getId());
 
             entryDAO.startTransaction();
             entry = entryDAO.persist(entry);

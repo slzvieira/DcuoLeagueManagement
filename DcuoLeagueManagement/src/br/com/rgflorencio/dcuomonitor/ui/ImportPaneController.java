@@ -36,7 +36,7 @@ import br.com.rgflorencio.dcuomonitor.service.ServiceException;
  * @author sandro.vieira
  * @version 1.0, 01/06/2015 - sandro.vieira - Implementacao.
  */
-public class ImportPaneController extends BorderPane {
+public class ImportPaneController extends BorderPane implements SecondaryController {
 
     @FXML
     private Label lblLeagueName;
@@ -69,7 +69,7 @@ public class ImportPaneController extends BorderPane {
     private FileChooser fileChooser = new FileChooser();
     private File initialDirectory;
 
-    void setRoot(MainPaneController rootController) {
+    public void setRoot(MainPaneController rootController) {
         this.rootController = rootController;
     }
 

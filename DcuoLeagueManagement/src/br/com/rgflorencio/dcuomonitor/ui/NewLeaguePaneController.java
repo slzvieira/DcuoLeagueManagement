@@ -5,6 +5,13 @@
  */
 package br.com.rgflorencio.dcuomonitor.ui;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+
 import javax.swing.JOptionPane;
 
 import br.com.rgflorencio.dcuomonitor.dao.DAOException;
@@ -13,19 +20,13 @@ import br.com.rgflorencio.dcuomonitor.dao.census.CensusLeagueDAO;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoDAOFactory;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoLeagueDAO;
 import br.com.rgflorencio.dcuomonitor.model.DcuoLeague;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 
 /**
  * TODO DOCUMENT ME!
  * @author sandro.vieira
  * @version 1.0, 12/07/2016 - sandro.vieira - Implementacao.
  */
-public class NewLeaguePaneController extends BorderPane {
+public class NewLeaguePaneController extends AnchorPane implements SecondaryController {
 
     @FXML
     private Label lblCensusIdTitle;

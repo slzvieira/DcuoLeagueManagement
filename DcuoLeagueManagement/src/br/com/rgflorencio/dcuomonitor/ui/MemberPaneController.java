@@ -20,11 +20,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import br.com.rgflorencio.dcuomonitor.dao.DAOException;
-import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoDAOFactory;
 import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoCharacterDAO;
+import br.com.rgflorencio.dcuomonitor.dao.dcuo.DcuoDAOFactory;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterEntry;
 import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterStatus;
 
@@ -33,7 +32,7 @@ import br.com.rgflorencio.dcuomonitor.model.DcuoCharacterStatus;
  * @author sandro.vieira
  * @version 1.0, 29/06/2016 - sandro.vieira - Implementacao.
  */
-public class MemberPaneController extends BorderPane {
+public class MemberPaneController extends BorderPane implements SecondaryController {
     
     private static final SimpleDateFormat SERIES_TITLE_FORMAT = new SimpleDateFormat("dd/MM");
 
@@ -78,6 +77,13 @@ public class MemberPaneController extends BorderPane {
 
     @FXML
     private CheckBox chkSkill;
+
+    private MainPaneController rootController;
+    
+    @Override
+    public void setRoot(MainPaneController root) {
+        rootController = root;
+    }
 
     @FXML
     void chkFeatureActionPerformed(ActionEvent event) {

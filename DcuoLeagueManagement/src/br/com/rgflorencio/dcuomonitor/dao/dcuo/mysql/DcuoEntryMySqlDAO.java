@@ -61,7 +61,7 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
         try {
 
             cn = getConnection();
-            ps = cn.prepareStatement("SELECT entry_date FROM tab_entry WHERE entry_code = ?");
+            ps = cn.prepareStatement("SELECT entry_date, league_code FROM tab_entry WHERE entry_code = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
@@ -69,6 +69,7 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
                 entry = new DcuoEntry();
                 entry.setId(id);
                 entry.setDateTime(new Date(rs.getTimestamp("entry_date").getTime()));
+                entry.setLeagueId(rs.getInt("league_code"));
             }
 
             return entry;
@@ -97,12 +98,13 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
 
             cn = getConnection();
             st = cn.createStatement();
-            rs = st.executeQuery("SELECT entry_code, entry_date FROM tab_entry ORDER BY entry_date");
+            rs = st.executeQuery("SELECT entry_code, entry_date, league_code FROM tab_entry ORDER BY entry_date");
 
             while (rs.next()) {
                 entry = new DcuoEntry();
                 entry.setId(rs.getInt("entry_code"));
                 entry.setDateTime(new Date(rs.getTimestamp("entry_date").getTime()));
+                entry.setLeagueId(rs.getInt("league_code"));
                 entryList.add(entry);
             }
 
@@ -227,8 +229,9 @@ public class DcuoEntryMySqlDAO extends AbstractMySqlDAO implements DcuoEntryDAO 
         try {
 
             cn = getConnection();
-            ps = cn.prepareStatement("INSERT INTO tab_entry (entry_date) VALUES (?)");
+            ps = cn.prepareStatement("INSERT INTO tab_entry (entry_date, league_code) VALUES (?, ?)");
             ps.setTimestamp(1, new Timestamp(entry.getDateTime().getTime()));
+            ps.setInt(2, entry.getLeagueId());
             ps.executeUpdate();
 
             newId = findLastInsertId();

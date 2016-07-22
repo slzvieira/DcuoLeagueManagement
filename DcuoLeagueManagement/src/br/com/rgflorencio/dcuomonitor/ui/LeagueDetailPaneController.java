@@ -18,7 +18,7 @@ import javafx.scene.layout.BorderPane;
  * @author sandro.vieira
  * @version 1.0, 29/06/2016 - sandro.vieira - Implementacao.
  */
-public class LeagueDetailPaneController extends BorderPane {
+public class LeagueDetailPaneController extends BorderPane implements SecondaryController {
 
     @FXML
     private Label lblSkillAverage;

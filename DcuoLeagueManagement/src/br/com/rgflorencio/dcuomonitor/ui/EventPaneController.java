@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
  * @author sandro.vieira
  * @version 1.0, 29/06/2016 - sandro.vieira - Implementacao.
  */
-public class EventPaneController extends BorderPane {
+public class EventPaneController extends BorderPane implements SecondaryController {
 
     @FXML
     private TextArea txtIncreaseSP;
@@ -34,4 +34,10 @@ public class EventPaneController extends BorderPane {
 
     @FXML
     private TextArea txtEnterLeague;
+
+    private MainPaneController rootController;
+    
+    public void setRoot(MainPaneController rootController) {
+        this.rootController = rootController;
+    }
 }

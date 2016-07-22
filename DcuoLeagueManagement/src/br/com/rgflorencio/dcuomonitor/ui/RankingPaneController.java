@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
  * @author sandro.vieira
  * @version 1.0, 29/06/2016 - sandro.vieira - Implementacao.
  */
-public class RankingPaneController extends BorderPane {
+public class RankingPaneController extends BorderPane implements SecondaryController {
 
     @FXML
     private TableColumn<?, ?> colName;
@@ -40,4 +40,11 @@ public class RankingPaneController extends BorderPane {
 
     @FXML
     private TableColumn<?, ?> colPower;
+
+    private MainPaneController rootController;
+    
+    @Override
+    public void setRoot(MainPaneController root) {
+        rootController = root;
+    }
 }
